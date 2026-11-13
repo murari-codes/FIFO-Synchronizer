@@ -1,0 +1,48 @@
+`timescale 1ns/1ns
+
+module FIFOSync_TB();
+reg clk, reset, wr_en, re_en;
+reg [3:0] datain;
+wire [3:0] dataout;
+wire full, empty;
+FIFOsync FIFO  (clk,reset,datain,wr_en,re_en,dataout,full,empty);
+
+always #5 clk = ~clk;
+
+
+initial begin
+    $dumpfile("FIFOSync.vcd");
+    $dumpvars(1,FIFOSync_TB);
+    clk=0;  
+    reset=1'b1;
+    wr_en=0;
+    re_en=0;
+    datain=4'b0000;
+    #20
+
+    reset=0;
+
+    wr_en=1;
+
+    datain=4'b1010;
+    #10
+    datain=4'b0111;
+    #10
+    datain=4'b1110;
+    #10
+    datain=4'b0001;
+    #   
+
+    wr_en=0;
+
+    re_en=1;
+
+    #40
+
+    re_en=0;
+
+    #20
+
+    $finish;
+end
+endmodule
